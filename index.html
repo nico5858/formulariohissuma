@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Hissuma - Formulario de Inicio de Proyecto Solar</title>
+    <meta name="description" content="Inicia tu proyecto solar con Hissuma. Completa nuestro formulario y recibe una cotización personalizada para tu sistema de energía renovable.">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -38,6 +39,15 @@
         }
     </script>
     <style>
+        :root {
+            --footer-bg: #1A202C;
+            --primary: #F59E0B;
+            --secondary: #065F46;
+            --accent: #3B82F6;
+            --text-light: #718096;
+            --text-dark: #2D3748;
+        }
+
         .compass {
             display: grid;
             grid-template-columns: repeat(3, 1fr);
@@ -45,7 +55,7 @@
             width: 250px;
             margin: 0 auto;
         }
-        
+
         .compass-item {
             aspect-ratio: 1/1;
             display: flex;
@@ -56,19 +66,19 @@
             border: 2px solid #E5E7EB;
             transition: all 0.3s ease;
         }
-        
+
         .compass-item:hover, .compass-item.selected {
-            background-color: #3B82F6;
+            background-color: var(--accent);
             color: white;
-            border-color: #3B82F6;
+            border-color: var(--accent);
         }
-        
+
         .direction-active {
-            background-color: #3B82F6;
+            background-color: var(--accent);
             color: white;
-            border-color: #3B82F6;
+            border-color: var(--accent);
         }
-        
+
         .progress-bar {
             height: 8px;
             background-color: #E5E7EB;
@@ -76,36 +86,37 @@
             overflow: hidden;
             margin: 20px 0;
         }
-        
+
         .progress-fill {
             height: 100%;
-            background-color: #F59E0B;
-            transition: width 0.5s ease;
+            background-color: var(--primary);
+            transition: width 0.5s cubic-bezier(0.4, 0, 0.2, 1);
         }
-        
+
         .section-indicator {
             display: flex;
             justify-content: space-between;
             margin-bottom: 20px;
             flex-wrap: wrap;
         }
-        
+
         .indicator-step {
             flex: 1;
-            min-width: 80px;
+            min-width: 40px;
             padding: 8px 0;
             text-align: center;
             font-weight: 500;
-            font-size: 0.8rem;
+            font-size: 0.9rem;
             position: relative;
             margin-bottom: 10px;
+            cursor: pointer;
         }
-        
+
         .indicator-step.active {
-            color: #F59E0B;
+            color: var(--primary);
             font-weight: 600;
         }
-        
+
         .indicator-step:not(:last-child):after {
             content: '';
             position: absolute;
@@ -116,21 +127,20 @@
             background-color: #E5E7EB;
             z-index: -1;
         }
-        
+
         .form-section {
             display: none;
+            opacity: 0;
+            transform: translateY(10px);
+            transition: opacity 0.3s ease, transform 0.3s ease;
         }
-        
+
         .form-section.active {
             display: block;
-            animation: fadeIn 0.5s ease;
+            opacity: 1;
+            transform: translateY(0);
         }
-        
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(20px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-        
+
         /* Estilos para el input de archivo */
         .file-input-container {
             position: relative;
@@ -138,7 +148,7 @@
             display: inline-block;
             width: 100%;
         }
-        
+
         .file-input-button {
             border: 2px dashed #CBD5E0;
             border-radius: 0.5rem;
@@ -151,12 +161,12 @@
             transition: all 0.3s ease;
             width: 100%;
         }
-        
+
         .file-input-button:hover {
-            border-color: #3B82F6;
+            border-color: var(--accent);
             background-color: #F7FAFC;
         }
-        
+
         .file-input {
             position: absolute;
             left: 0;
@@ -166,23 +176,118 @@
             height: 100%;
             cursor: pointer;
         }
-        
+
         .file-name {
             margin-top: 0.5rem;
             font-size: 0.875rem;
             color: #4A5568;
             text-align: center;
         }
+
+        /* Sticky header */
+        header.sticky {
+            position: sticky;
+            top: 0;
+            z-index: 50;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            animation: slideDown 0.3s ease;
+        }
+
+        @keyframes slideDown {
+            from { transform: translateY(-100%); }
+            to { transform: translateY(0); }
+        }
+
+        /* Mobile progress */
+        .mobile-progress {
+            display: none;
+        }
+
+        @media (max-width: 640px) {
+            .mobile-progress {
+                display: flex;
+                justify-content: space-between;
+                margin-bottom: 20px;
+                position: relative;
+            }
+
+            .mobile-step {
+                width: 36px;
+                height: 36px;
+                border-radius: 50%;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                background-color: #E5E7EB;
+                color: #4A5568;
+                font-weight: 600;
+                position: relative;
+                cursor: pointer;
+            }
+
+            .mobile-step.active {
+                background-color: var(--primary);
+                color: white;
+            }
+
+            .mobile-step:not(:last-child):after {
+                content: '';
+                position: absolute;
+                top: 50%;
+                left: 100%;
+                width: 20px;
+                height: 2px;
+                background-color: #E5E7EB;
+                transform: translateY(-50%);
+            }
+
+            .mobile-step-tooltip {
+                position: absolute;
+                bottom: 100%;
+                left: 50%;
+                transform: translateX(-50%);
+                background-color: var(--text-dark);
+                color: white;
+                padding: 4px 8px;
+                border-radius: 4px;
+                font-size: 12px;
+                white-space: nowrap;
+                opacity: 0;
+                visibility: hidden;
+                transition: opacity 0.2s ease;
+                margin-bottom: 8px;
+            }
+
+            .mobile-step:hover .mobile-step-tooltip {
+                opacity: 1;
+                visibility: visible;
+            }
+
+            .section-indicator {
+                display: none;
+            }
+        }
+
+        /* Button hover effect */
+        .btn-next {
+            transition: all 0.3s ease;
+            transform: translateY(0);
+        }
+
+        .btn-next:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+        }
     </style>
 </head>
 <body class="bg-solar-50 text-solar-700 font-sans min-h-screen flex flex-col">
     <!-- Header -->
-    <header class="bg-white shadow-sm">
+    <header id="mainHeader" class="bg-white shadow-sm">
         <div class="container mx-auto px-4 py-4 flex items-center justify-between">
             <div class="flex items-center">
                 <div class="full flex items-center justify-center">
                 </div>
-            <img src="imagenes/6e01e8bfd39f48e194d3ce5969becb5f.png" alt="Logo Hissuma" style="height: 50px;" />
+                <img src="imagenes/6e01e8bfd39f48e194d3ce5969becb5f.png" alt="Logo Hissuma" style="height: 50px;" loading="lazy" />
             </div>
             <div class="flex items-center">
                 <span class="px-3 py-1 bg-solar-100 rounded-full text-sm font-medium text-solar-800">
@@ -198,13 +303,43 @@
             <div class="progress-bar">
                 <div class="progress-fill w-1/6" id="progressFill"></div>
             </div>
+            
+            <!-- Mobile progress (numbers only) -->
+            <div class="mobile-progress">
+                <div class="mobile-step" data-step="1">
+                    1
+                    <span class="mobile-step-tooltip">Generales</span>
+                </div>
+                <div class="mobile-step" data-step="2">
+                    2
+                    <span class="mobile-step-tooltip">Tecnología</span>
+                </div>
+                <div class="mobile-step" data-step="3">
+                    3
+                    <span class="mobile-step-tooltip">Ubicación</span>
+                </div>
+                <div class="mobile-step" data-step="4">
+                    4
+                    <span class="mobile-step-tooltip">Plazos</span>
+                </div>
+                <div class="mobile-step" data-step="5">
+                    5
+                    <span class="mobile-step-tooltip">Reunión</span>
+                </div>
+                <div class="mobile-step" data-step="6">
+                    6
+                    <span class="mobile-step-tooltip">Resumen</span>
+                </div>
+            </div>
+            
+            <!-- Desktop progress (full text) -->
             <div class="section-indicator">
                 <div class="indicator-step active" id="step1">1. Generales</div>
                 <div class="indicator-step" id="step2">2. Tecnología</div>
                 <div class="indicator-step" id="step3">3. Ubicación</div>
                 <div class="indicator-step" id="step4">4. Plazos</div>
                 <div class="indicator-step" id="step5">5. Reunión</div>
-                <div class="indicator-step" id="step6">Resumen</div>
+                <div class="indicator-step" id="step6">6. Resumen</div>
             </div>
         </div>
     </div>
@@ -264,7 +399,7 @@
                     
                     <div class="flex justify-between mt-10 pt-5 border-t border-solar-200">
                         <div></div>
-                        <button type="button" onclick="nextSection('section2')" class="bg-solar-primary text-white font-medium px-6 py-3 rounded-lg hover:bg-amber-600 transition duration-300">
+                        <button type="button" onclick="nextSection('section2')" class="bg-solar-primary text-white font-medium px-6 py-3 rounded-lg hover:bg-amber-600 transition duration-300 btn-next">
                             Siguiente <i class="fas fa-arrow-right ml-2"></i>
                         </button>
                     </div>
@@ -455,7 +590,7 @@
                         <button type="button" onclick="prevSection('section1')" class="text-solar-600 font-medium px-6 py-3 rounded-lg hover:bg-solar-100 transition duration-300">
                             <i class="fas fa-arrow-left mr-2"></i> Anterior
                         </button>
-                        <button type="button" onclick="nextSection('section3')" class="bg-solar-primary text-white font-medium px-6 py-3 rounded-lg hover:bg-amber-600 transition duration-300">
+                        <button type="button" onclick="nextSection('section3')" class="bg-solar-primary text-white font-medium px-6 py-3 rounded-lg hover:bg-amber-600 transition duration-300 btn-next">
                             Siguiente <i class="fas fa-arrow-right ml-2"></i>
                         </button>
                     </div>
@@ -529,7 +664,7 @@
                         <button type="button" onclick="prevSection('section2')" class="text-solar-600 font-medium px-6 py-3 rounded-lg hover:bg-solar-100 transition duration-300">
                             <i class="fas fa-arrow-left mr-2"></i> Anterior
                         </button>
-                        <button type="button" onclick="nextSection('section4')" class="bg-solar-primary text-white font-medium px-6 py-3 rounded-lg hover:bg-amber-600 transition duration-300">
+                        <button type="button" onclick="nextSection('section4')" class="bg-solar-primary text-white font-medium px-6 py-3 rounded-lg hover:bg-amber-600 transition duration-300 btn-next">
                             Siguiente <i class="fas fa-arrow-right ml-2"></i>
                         </button>
                     </div>
@@ -576,7 +711,7 @@
                         <button type="button" onclick="prevSection('section3')" class="text-solar-600 font-medium px-6 py-3 rounded-lg hover:bg-solar-100 transition duration-300">
                             <i class="fas fa-arrow-left mr-2"></i> Anterior
                         </button>
-                        <button type="button" onclick="nextSection('section5')" class="bg-solar-primary text-white font-medium px-6 py-3 rounded-lg hover:bg-amber-600 transition duration-300">
+                        <button type="button" onclick="nextSection('section5')" class="bg-solar-primary text-white font-medium px-6 py-3 rounded-lg hover:bg-amber-600 transition duration-300 btn-next">
                             Siguiente <i class="fas fa-arrow-right ml-2"></i>
                         </button>
                     </div>
@@ -704,7 +839,7 @@
                         <button type="button" onclick="prevSection('section4')" class="text-solar-600 font-medium px-6 py-3 rounded-lg hover:bg-solar-100 transition duration-300">
                             <i class="fas fa-arrow-left mr-2"></i> Anterior
                         </button>
-                        <button type="button" id="submitForm" class="bg-green-600 text-white font-medium px-6 py-3 rounded-lg hover:bg-green-700 transition duration-300">
+                        <button type="button" id="submitForm" class="bg-green-600 text-white font-medium px-6 py-3 rounded-lg hover:bg-green-700 transition duration-300 btn-next">
                             Enviar Formulario <i class="fas fa-paper-plane ml-2"></i>
                         </button>
                     </div>
@@ -723,7 +858,7 @@
                         <p class="text-solar-600 mb-8 max-w-lg mx-auto">
                             También recibirás un correo electrónico con los detalles de tu solicitud y próximos pasos.
                         </p>
-                        <button type="button" onclick="location.reload()" class="bg-solar-primary text-white font-medium px-6 py-3 rounded-lg hover:bg-amber-600 transition duration-300">
+                        <button type="button" onclick="location.reload()" class="bg-solar-primary text-white font-medium px-6 py-3 rounded-lg hover:bg-amber-600 transition duration-300 btn-next">
                             <i class="fas fa-redo mr-2"></i> Enviar otro formulario
                         </button>
                     </div>
@@ -733,14 +868,14 @@
     </main>
 
     <!-- Pie de página -->
-    <footer class="bg-solar-800 text-white py-6 mt-auto">
+    <footer class="bg-[var(--footer-bg)] text-white py-6 mt-auto">
         <div class="container mx-auto px-4">
             <div class="flex flex-col md:flex-row justify-between items-center">
                 <div class="mb-4 md:mb-0">
                     <div class="flex items-center">
                         <div class="-center justify-center">
                         </div>
-            <img src="imagenes/Diseño sin título (18).png" alt="Logo Hissuma" style="height: 45px;" />
+            <img src="imagenes/Diseño sin título (18).png" alt="Logo Hissuma" style="height: 45px;" loading="lazy" />
                     </div>
                     <p class="mt-2 text-solar-300 text-sm">Soluciones solares para un futuro sostenible</p>
                 </div>
@@ -765,10 +900,14 @@
             // Actualizar indicadores de sección
             for(let i = 1; i <= 6; i++) {
                 const step = document.getElementById(`step${i}`);
+                const mobileStep = document.querySelector(`.mobile-step[data-step="${i}"]`);
+                
                 if (i === currentSection) {
-                    step.classList.add('active');
+                    if (step) step.classList.add('active');
+                    if (mobileStep) mobileStep.classList.add('active');
                 } else {
-                    step.classList.remove('active');
+                    if (step) step.classList.remove('active');
+                    if (mobileStep) mobileStep.classList.remove('active');
                 }
             }
         }
@@ -977,12 +1116,54 @@
             }
         });
         
+        // Sticky header
+        function handleStickyHeader() {
+            const header = document.getElementById('mainHeader');
+            const sticky = header.offsetTop;
+            
+            window.addEventListener('scroll', () => {
+                if (window.pageYOffset > sticky) {
+                    header.classList.add('sticky');
+                } else {
+                    header.classList.remove('sticky');
+                }
+            });
+        }
+        
+        // Mobile step navigation
+        function setupMobileSteps() {
+            const mobileSteps = document.querySelectorAll('.mobile-step');
+            
+            mobileSteps.forEach(step => {
+                step.addEventListener('click', () => {
+                    const stepNumber = parseInt(step.dataset.step);
+                    if (stepNumber < currentSection || validateCurrentSection()) {
+                        changeSection(`section${stepNumber}`);
+                    }
+                });
+            });
+        }
+        
+        // Validar sección actual antes de permitir navegación
+        function validateCurrentSection() {
+            if (currentSection === 1) {
+                return validateSection1();
+            } else if (currentSection === 2) {
+                return validateSection2();
+            } else if (currentSection === 3) {
+                return validateSection3();
+            }
+            return true;
+        }
+        
         // Inicialización cuando el DOM esté cargado
         document.addEventListener('DOMContentLoaded', function() {
             updateProgress();
             handleTechnologyChange();
             handleConnectionModeChange();
             setupCompass();
+            handleStickyHeader();
+            setupMobileSteps();
         });
     </script>
 </body>
