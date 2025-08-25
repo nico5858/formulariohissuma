@@ -3,10 +3,8 @@
     {
       "source": "/(.*)",
       "headers": [
-        {
-          "key": "Content-Security-Policy",
-          "value": "frame-ancestors 'self' https://hissuma.com https://www.hissuma.com https://hissuma.com.ar https://www.hissuma.com.ar"
-        }
+        { "key": "X-Frame-Options", "value": "ALLOW-FROM https://www.hissuma.com https://hissuma.com" },
+        { "key": "Content-Security-Policy", "value": "frame-ancestors 'self' https://www.hissuma.com https://hissuma.com" }
       ]
     }
   ]
