@@ -1,1012 +1,534 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Hissuma - Formulario de Inicio de Proyecto Solar</title>
-    <meta name="description" content="Inicia tu proyecto solar con Hissuma. Completa nuestro formulario y recibe una cotización personalizada para tu sistema de energía renovable.">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <script src="https://cdn.tailwindcss.com"></script>
-    <style>
-        :root {
-            --primary: #F59E0B;
-            --secondary: #065F46;
-            --accent: #3B82F6;
-            --text-light: #718096;
-            --text-dark: #2D3748;
-            --border-color: #E5E7EB;
-            --bg-light: #F7FAFC;
-            --success: #10B981;
-        }
-
-        body {
-            font-family: 'Montserrat', sans-serif;
-            background-color: var(--bg-light);
-            color: var(--text-dark);
-            margin: 0;
-            padding: 0;
-        }
-
-        .form-container {
-            max-width: 600px;
-            margin: 0 auto;
-            width: 100%;
-            background-color: white;
-            border-radius: 0.5rem;
-            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
-            overflow: hidden;
-        }
-
-        .compass {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            grid-gap: 10px;
-            width: 250px;
-            margin: 0 auto;
-        }
-
-        .compass-item {
-            aspect-ratio: 1/1;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            cursor: pointer;
-            border-radius: 50%;
-            border: 2px solid var(--border-color);
-            transition: all 0.3s ease;
-        }
-
-        .compass-item:hover, .compass-item.selected {
-            background-color: var(--accent);
-            color: white;
-            border-color: var(--accent);
-        }
-
-        .progress-bar {
-            height: 8px;
-            background-color: var(--border-color);
-            border-radius: 4px;
-            overflow: hidden;
-            margin: 20px 0;
-        }
-
-        .progress-fill {
-            height: 100%;
-            background-color: var(--primary);
-            transition: width 0.5s cubic-bezier(0.4, 0, 0.2, 1);
-        }
-
-        .section-indicator {
-            display: flex;
-            justify-content: space-between;
-            margin-bottom: 20px;
-            flex-wrap: wrap;
-        }
-
-        .indicator-step {
-            flex: 1;
-            min-width: 40px;
-            padding: 8px 0;
-            text-align: center;
-            font-weight: 500;
-            font-size: 0.9rem;
-            position: relative;
-            margin-bottom: 10px;
-            cursor: pointer;
-        }
-
-        .indicator-step.active {
-            color: var(--primary);
-            font-weight: 600;
-        }
-
-        .indicator-step:not(:last-child):after {
-            content: '';
-            position: absolute;
-            top: 20px;
-            right: 0;
-            width: 100%;
-            height: 2px;
-            background-color: var(--border-color);
-            z-index: -1;
-        }
-
-        .form-section {
-            display: none;
-            opacity: 0;
-            transform: translateY(10px);
-            transition: opacity 0.3s ease, transform 0.3s ease;
-            padding: 1.5rem;
-        }
-
-        .form-section.active {
-            display: block;
-            opacity: 1;
-            transform: translateY(0);
-        }
-
-        /* Estilos para el input de archivo */
-        .file-input-container {
-            position: relative;
-            overflow: hidden;
-            display: inline-block;
-            width: 100%;
-        }
-
-        .file-input-button {
-            border: 2px dashed var(--border-color);
-            border-radius: 0.5rem;
-            padding: 1.5rem;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            width: 100%;
-        }
-
-        .file-input-button:hover {
-            border-color: var(--accent);
-            background-color: var(--bg-light);
-        }
-
-        .file-input {
-            position: absolute;
-            left: 0;
-            top: 0;
-            opacity: 0;
-            width: 100%;
-            height: 100%;
-            cursor: pointer;
-        }
-
-        .file-name {
-            margin-top: 0.5rem;
-            font-size: 0.875rem;
-            color: var(--text-light);
-            text-align: center;
-        }
-
-        /* Mobile progress */
-        .mobile-progress {
-            display: none;
-        }
-
-        @media (max-width: 640px) {
-            .mobile-progress {
-                display: flex;
-                justify-content: space-between;
-                margin-bottom: 20px;
-                position: relative;
-            }
-
-            .mobile-step {
-                width: 36px;
-                height: 36px;
-                border-radius: 50%;
-                display: flex;
-                align-items: center;
-                justify-content: center;
-                background-color: var(--border-color);
-                color: var(--text-light);
-                font-weight: 600;
-                position: relative;
-                cursor: pointer;
-            }
-
-            .mobile-step.active {
-                background-color: var(--primary);
-                color: white;
-            }
-
-            .mobile-step:not(:last-child):after {
-                content: '';
-                position: absolute;
-                top: 50%;
-                left: 100%;
-                width: 20px;
-                height: 2px;
-                background-color: var(--border-color);
-                transform: translateY(-50%);
-            }
-
-            .mobile-step-tooltip {
-                position: absolute;
-                bottom: 100%;
-                left: 50%;
-                transform: translateX(-50%);
-                background-color: var(--text-dark);
-                color: white;
-                padding: 4px 8px;
-                border-radius: 4px;
-                font-size: 12px;
-                white-space: nowrap;
-                opacity: 0;
-                visibility: hidden;
-                transition: opacity 0.2s ease;
-                margin-bottom: 8px;
-            }
-
-            .mobile-step:hover .mobile-step-tooltip {
-                opacity: 1;
-                visibility: visible;
-            }
-
-            .section-indicator {
-                display: none;
-            }
-        }
-
-        /* Button hover effect */
-        .btn-next {
-            transition: all 0.3s ease;
-            transform: translateY(0);
-        }
-
-        .btn-next:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
-        }
-
-        .btn-primary {
-            background-color: var(--primary);
-            color: white;
-        }
-
-        .btn-primary:hover {
-            background-color: #E6900E;
-        }
-
-        .btn-secondary {
-            background-color: white;
-            color: var(--text-dark);
-            border: 1px solid var(--border-color);
-        }
-
-        .btn-secondary:hover {
-            background-color: var(--bg-light);
-        }
-
-        .btn-success {
-            background-color: var(--success);
-            color: white;
-        }
-
-        .btn-success:hover {
-            background-color: #0E9F6E;
-        }
-
-        .success-icon {
-            background-color: #D1FAE5;
-            color: var(--success);
-        }
-    </style>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Hissuma - Formulario de Inicio de Proyecto Solar</title>
+  <meta name="description" content="Inicia tu proyecto solar con Hissuma. Completa nuestro formulario y recibe una cotización personalizada para tu sistema de energía renovable.">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    :root{
+      --primary:#F59E0B; --secondary:#065F46; --accent:#3B82F6;
+      --text-light:#718096; --text-dark:#2D3748;
+      --border-color:#E5E7EB; --bg-light:#F7FAFC; --success:#10B981;
+    }
+    body{font-family:'Montserrat',sans-serif;background:var(--bg-light);color:var(--text-dark);margin:0}
+    .form-container{max-width:600px;margin:0 auto;background:#fff;border-radius:.5rem;box-shadow:0 4px 6px -1px rgba(0,0,0,.1),0 2px 4px -1px rgba(0,0,0,.06);overflow:hidden}
+    .compass{display:grid;grid-template-columns:repeat(3,1fr);grid-gap:10px;width:250px;margin:0 auto}
+    .compass-item{aspect-ratio:1/1;display:flex;align-items:center;justify-content:center;cursor:pointer;border-radius:50%;border:2px solid var(--border-color);transition:.3s}
+    .compass-item:hover,.compass-item.selected{background:var(--accent);color:#fff;border-color:var(--accent)}
+    .progress-bar{height:8px;background:var(--border-color);border-radius:4px;overflow:hidden;margin:20px 0}
+    .progress-fill{height:100%;background:var(--primary);transition:width .5s cubic-bezier(.4,0,.2,1)}
+    .section-indicator{display:flex;justify-content:space-between;margin-bottom:20px;flex-wrap:wrap}
+    .indicator-step{flex:1;min-width:40px;padding:8px 0;text-align:center;font-weight:500;font-size:.9rem;position:relative;margin-bottom:10px;cursor:pointer}
+    .indicator-step.active{color:var(--primary);font-weight:600}
+    .indicator-step:not(:last-child):after{content:'';position:absolute;top:20px;right:0;width:100%;height:2px;background:var(--border-color);z-index:-1}
+    .form-section{display:none;opacity:0;transform:translateY(10px);transition:opacity .3s, transform .3s; padding:1.5rem}
+    .form-section.active{display:block;opacity:1;transform:translateY(0)}
+    .mobile-progress{display:none}
+    @media (max-width:640px){
+      .mobile-progress{display:flex;justify-content:space-between;margin-bottom:20px;position:relative}
+      .mobile-step{width:36px;height:36px;border-radius:50%;display:flex;align-items:center;justify-content:center;background:var(--border-color);color:var(--text-light);font-weight:600;position:relative;cursor:pointer}
+      .mobile-step.active{background:var(--primary);color:#fff}
+      .mobile-step:not(:last-child):after{content:'';position:absolute;top:50%;left:100%;width:20px;height:2px;background:var(--border-color);transform:translateY(-50%)}
+      .mobile-step-tooltip{position:absolute;bottom:100%;left:50%;transform:translateX(-50%);background:var(--text-dark);color:#fff;padding:4px 8px;border-radius:4px;font-size:12px;white-space:nowrap;opacity:0;visibility:hidden;transition:opacity .2s;margin-bottom:8px}
+      .mobile-step:hover .mobile-step-tooltip{opacity:1;visibility:visible}
+      .section-indicator{display:none}
+    }
+    .btn-next{transition:.3s;transform:translateY(0)}
+    .btn-next:hover{transform:translateY(-2px);box-shadow:0 4px 6px -1px rgba(0,0,0,.1),0 2px 4px -1px rgba(0,0,0,.06)}
+    .btn-primary{background:var(--primary);color:#fff}
+    .btn-primary:hover{background:#E6900E}
+    .btn-secondary{background:#fff;color:var(--text-dark);border:1px solid var(--border-color)}
+    .btn-secondary:hover{background:var(--bg-light)}
+    .btn-success{background:var(--success);color:#fff}
+    .btn-success:hover{background:#0E9F6E}
+    .success-icon{background:#D1FAE5;color:var(--success)}
+    /* ---- tiles con texto largo (arreglo desborde) ---- */
+    .choice-tile{display:flex;align-items:flex-start;gap:.75rem}
+    .choice-tile span{white-space:normal;word-break:break-word;line-height:1.2}
+  </style>
 </head>
 <body>
-    <div class="form-container">
-        <!-- Progress indicator -->
-        <div class="bg-gray-100 py-4 px-6">
-            <div class="progress-bar">
-                <div class="progress-fill w-1/5" id="progressFill"></div>
-            </div>
+  <div class="form-container">
+    <!-- Progress -->
+    <div class="bg-gray-100 py-4 px-6">
+      <div class="progress-bar"><div class="progress-fill w-1/5" id="progressFill"></div></div>
+      <div class="mobile-progress">
+        <div class="mobile-step" data-step="1">1<span class="mobile-step-tooltip">Generales</span></div>
+        <div class="mobile-step" data-step="2">2<span class="mobile-step-tooltip">Tecnología</span></div>
+        <div class="mobile-step" data-step="3">3<span class="mobile-step-tooltip">Ubicación</span></div>
+        <div class="mobile-step" data-step="4">4<span class="mobile-step-tooltip">Plazos</span></div>
+        <div class="mobile-step" data-step="5">5<span class="mobile-step-tooltip">Confirmación</span></div>
+      </div>
+      <div class="section-indicator">
+        <div class="indicator-step active" id="step1">1. Generales</div>
+        <div class="indicator-step" id="step2">2. Tecnología</div>
+        <div class="indicator-step" id="step3">3. Ubicación</div>
+        <div class="indicator-step" id="step4">4. Plazos</div>
+        <div class="indicator-step" id="step5">5. Confirmación</div>
+      </div>
+    </div>
 
-            <!-- Mobile progress (numbers only) -->
-            <div class="mobile-progress">
-                <div class="mobile-step" data-step="1">
-                    1
-                    <span class="mobile-step-tooltip">Generales</span>
-                </div>
-                <div class="mobile-step" data-step="2">
-                    2
-                    <span class="mobile-step-tooltip">Tecnología</span>
-                </div>
-                <div class="mobile-step" data-step="3">
-                    3
-                    <span class="mobile-step-tooltip">Ubicación</span>
-                </div>
-                <div class="mobile-step" data-step="4">
-                    4
-                    <span class="mobile-step-tooltip">Plazos</span>
-                </div>
-                <div class="mobile-step" data-step="5">
-                    5
-                    <span class="mobile-step-tooltip">Confirmación</span>
-                </div>
-            </div>
+    <!-- Form -->
+    <form id="projectForm" class="p-6 md:p-8"
+          action="https://script.google.com/macros/s/AKfycbwJIeB6mnsGo_3YFMDgpfzg_sVIvTw1dnZDM0QE06DVmYMeSpw50q_0YpP2VYWneCF5jQ/exec"
+          method="POST">
+      <!-- 1. Generales -->
+      <div id="section1" class="form-section active">
+        <h2 class="text-2xl font-bold text-gray-800 mb-6 border-b pb-3">
+          <i class="fas fa-user-circle mr-2 text-blue-500"></i>Datos Generales
+        </h2>
 
-            <!-- Desktop progress (full text) -->
-            <div class="section-indicator">
-                <div class="indicator-step active" id="step1">1. Generales</div>
-                <div class="indicator-step" id="step2">2. Tecnología</div>
-                <div class="indicator-step" id="step3">3. Ubicación</div>
-                <div class="indicator-step" id="step4">4. Plazos</div>
-                <div class="indicator-step" id="step5">5. Confirmación</div>
-            </div>
+        <div class="mb-5">
+          <label class="block text-gray-700 text-sm font-medium mb-2" for="fullname">Nombre completo <span class="text-red-500">*</span></label>
+          <input type="text" id="fullname" name="fullname" required class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-yellow-500">
         </div>
 
-        <!-- Formulario -->
-        <form id="projectForm" class="p-6 md:p-8" action="https://script.google.com/macros/s/AKfycbwJIeB6mnsGo_3YFMDgpfzg_sVIvTw1dnZDM0QE06DVmYMeSpw50q_0YpP2VYWneCF5jQ/exec" method="POST" enctype="multipart/form-data">
-            <!-- Sección 1: Datos Generales -->
-            <div id="section1" class="form-section active">
-                <h2 class="text-2xl font-bold text-gray-800 mb-6 border-b pb-3">
-                    <i class="fas fa-user-circle mr-2 text-blue-500"></i>Datos Generales
-                </h2>
-
-                <div class="mb-5">
-                    <label class="block text-gray-700 text-sm font-medium mb-2" for="fullname">
-                        Nombre completo <span class="text-red-500">*</span>
-                    </label>
-                    <input type="text" id="fullname" name="fullname" required class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-yellow-500">
-                </div>
-
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-5 mb-5">
-                    <div>
-                        <label class="block text-gray-700 text-sm font-medium mb-2" for="email">
-                            Correo electrónico <span class="text-red-500">*</span>
-                        </label>
-                        <input type="email" id="email" name="email" required class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-yellow-500">
-                    </div>
-
-                    <div>
-                        <label class="block text-gray-700 text-sm font-medium mb-2" for="phone">
-                            Teléfono de contacto <span class="text-red-500">*</span>
-                        </label>
-                        <input type="tel" id="phone" name="phone" required class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-yellow-500">
-                    </div>
-                </div>
-
-                <div class="mb-5">
-                    <label class="block text-gray-700 text-sm font-medium mb-2">
-                        Tipo de proyecto <span class="text-red-500">*</span>
-                    </label>
-                    <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
-                        <label class="flex items-center p-4 border border-gray-300 rounded-lg hover:border-blue-500 cursor-pointer">
-                            <input type="radio" name="projectType" value="Hogar" class="h-5 w-5 text-blue-500 focus:ring-yellow-500" required>
-                            <span class="ml-3 text-gray-700 font-medium">Hogar</span>
-                        </label>
-                        <label class="flex items-center p-4 border border-gray-300 rounded-lg hover:border-blue-500 cursor-pointer">
-                            <input type="radio" name="projectType" value="Negocio" class="h-5 w-5 text-blue-500 focus:ring-yellow-500">
-                            <span class="ml-3 text-gray-700 font-medium">Negocio</span>
-                        </label>
-                        <label class="flex items-center p-4 border border-gray-300 rounded-lg hover:border-blue-500 cursor-pointer">
-                            <input type="radio" name="projectType" value="Industria" class="h-5 w-5 text-blue-500 focus:ring-yellow-500">
-                            <span class="ml-3 text-gray-700 font-medium">Industria</span>
-                        </label>
-                    </div>
-                </div>
-
-                <div class="flex justify-between mt-10 pt-5 border-t border-gray-200">
-                    <div></div>
-                    <button type="button" onclick="nextSection('section2')" class="bg-yellow-500 text-white font-medium px-6 py-3 rounded-lg hover:bg-yellow-600 transition duration-300 btn-next">
-                        Siguiente <i class="fas fa-arrow-right ml-2"></i>
-                    </button>
-                </div>
-            </div>
-
-            <!-- Sección 2: Tecnología -->
-            <div id="section2" class="form-section">
-                <h2 class="text-2xl font-bold text-gray-800 mb-6 border-b pb-3">
-                    <i class="fas fa-solar-panel mr-2 text-blue-500"></i>Tecnología a utilizar
-                </h2>
-
-                <div class="mb-8">
-                    <label class="block text-gray-700 text-sm font-medium mb-2">
-                        Seleccione la tecnología principal <span class="text-red-500">*</span>
-                    </label>
-                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                        <label id="techFotovoltaica" class="tech-option flex flex-col p-5 border-2 border-gray-300 rounded-xl hover:border-blue-500 cursor-pointer">
-                            <div class="flex items-center">
-                                <input type="radio" name="technology" value="Fotovoltaica" class="h-5 w-5 text-blue-500 focus:ring-yellow-500" required>
-                                <span class="ml-3 text-gray-800 font-bold text-lg">Fotovoltaica</span>
-                            </div>
-                            <p class="mt-2 text-gray-600 text-sm pl-8">
-                                Generación de electricidad, ahorro en la factura, bombeo solar de agua
-                            </p>
-                        </label>
-
-                        <label id="techTermica" class="tech-option flex flex-col p-5 border-2 border-gray-300 rounded-xl hover:border-blue-500 cursor-pointer">
-                            <div class="flex items-center">
-                                <input type="radio" name="technology" value="Térmica" class="h-5 w-5 text-blue-500 focus:ring-yellow-500">
-                                <span class="ml-3 text-gray-800 font-bold text-lg">Térmica</span>
-                            </div>
-                            <p class="mt-2 text-gray-600 text-sm pl-8">
-                                Calefacción, agua caliente sanitaria, climatización de piscinas
-                            </p>
-                        </label>
-                    </div>
-                </div>
-
-                <!-- Fotovoltaica Detalles -->
-                <div id="fotovoltaicaDetails" class="hidden mb-5 bg-gray-50 p-5 rounded-xl">
-                    <h3 class="text-lg font-bold text-gray-800 mb-4">
-                        <i class="fas fa-bolt mr-2 text-blue-500"></i>Detalles Fotovoltaica
-                    </h3>
-
-                    <div class="mb-5">
-                        <label class="block text-gray-700 text-sm font-medium mb-2">
-                            Modalidad de conexión <span class="text-red-500">*</span>
-                        </label>
-                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                            <label class="flex items-center p-4 border border-gray-300 rounded-lg hover:border-blue-500 cursor-pointer">
-                                <input type="radio" name="connectionMode" value="On-grid" class="h-5 w-5 text-blue-500 focus:ring-yellow-500">
-                                <span class="ml-3 text-gray-700 font-medium">On-grid (Conectado a la red)</span>
-                            </label>
-                            <label class="flex items-center p-4 border border-gray-300 rounded-lg hover:border-blue-500 cursor-pointer">
-                                <input type="radio" name="connectionMode" value="Off-grid" class="h-5 w-5 text-blue-500 focus:ring-yellow-500">
-                                <span class="ml-3 text-gray-700 font-medium">Off-grid (Sistema autónomo)</span>
-                            </label>
-                        </div>
-                    </div>
-
-                    <div id="onGridDetails" class="hidden grid grid-cols-1 sm:grid-cols-2 gap-4 mb-5">
-                        <div>
-                            <label class="block text-gray-700 text-sm font-medium mb-2" for="configType">
-                                Configuración eléctrica <span class="text-red-500">*</span>
-                            </label>
-                            <select id="configType" name="configType" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-yellow-500">
-                                <option value="">Seleccione...</option>
-                                <option value="Monofásico">Monofásico</option>
-                                <option value="Trifásico">Trifásico</option>
-                            </select>
-                        </div>
-                    </div>
-
-                    <div class="bg-white p-4 rounded-lg mb-5">
-                        <label class="block text-gray-700 text-sm font-medium mb-2">
-                            Consumo estimado
-                        </label>
-                        <p class="text-gray-600 text-xs mb-3">Puedes encontrar el valor de kWh en tu factura de electricidad, generalmente en la sección de "Detalle de consumo".</p>
-
-                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                            <div>
-                                <label class="block text-gray-700 text-sm mb-2" for="invoiceAmount">
-                                    Monto promedio de la factura
-                                </label>
-                                <div class="relative">
-                                    <div class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none text-gray-500">
-                                        $
-                                    </div>
-                                    <input type="text" id="invoiceAmount" name="invoiceAmount" class="w-full pl-8 pr-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-yellow-500" placeholder="0.00">
-                                </div>
-                            </div>
-
-                            <div>
-                                <label class="block text-gray-700 text-sm mb-2" for="kwhConsumption">
-                                    Consumo promedio (kWh mensuales)
-                                </label>
-                                <div class="relative">
-                                    <input type="text" id="kwhConsumption" name="kwhConsumption" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-yellow-500" placeholder="0">
-                                    <div class="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none text-gray-500">
-                                        kWh
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <!-- Campo para adjuntar factura eléctrica -->
-                        <div class="mt-4">
-                            <label class="block text-gray-700 text-sm font-medium mb-2">
-                                Adjuntar factura eléctrica (opcional)
-                            </label>
-                            <p class="text-gray-500 text-xs mb-2">Formatos aceptados: PDF, JPG, JPEG, PNG (máx. 5MB)</p>
-
-                            <div class="file-input-container">
-                                <div class="file-input-button">
-                                    <i class="fas fa-file-upload text-3xl text-gray-400 mb-2"></i>
-                                    <span class="text-gray-700 font-medium">Seleccionar archivo</span>
-                                    <span class="text-gray-500 text-sm">o arrastrar y soltar</span>
-                                    <span id="fileName" class="file-name"></span>
-                                </div>
-                                <input type="file" id="electricBill" name="electricBill" class="file-input" accept=".pdf,.jpg,.jpeg,.png" onchange="updateFileName(this)">
-                            </div>
-                        </div>
-                    </div>
-
-                    <div id="offGridDetails" class="hidden bg-white p-4 rounded-lg">
-                        <h4 class="text-md font-bold text-gray-800 mb-3">
-                            <i class="fas fa-water mr-2 text-blue-500"></i>Sistema de bombeo solar
-                        </h4>
-                        <p class="text-gray-600 text-sm mb-3">La energía solar fotovoltaica también puede utilizarse para sistemas de bombeo de agua, ideal para zonas rurales o donde no llega la red eléctrica.</p>
-
-                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                            <div>
-                                <label class="block text-gray-700 text-sm mb-2" for="wellDepth">
-                                    Profundidad del pozo (metros)
-                                </label>
-                                <div class="relative">
-                                    <input type="text" id="wellDepth" name="wellDepth" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-yellow-500" placeholder="0">
-                                    <div class="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none text-gray-500">
-                                        m
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div>
-                                <label class="block text-gray-700 text-sm mb-2" for="waterLiters">
-                                    Litros de agua a extraer por día
-                                </label>
-                                <div class="relative">
-                                    <input type="text" id="waterLiters" name="waterLiters" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-yellow-500" placeholder="0">
-                                    <div class="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none text-gray-500">
-                                        L
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Térmica Detalles -->
-                <div id="termicaDetails" class="hidden mb-5 bg-gray-50 p-5 rounded-xl">
-                    <h3 class="text-lg font-bold text-gray-800 mb-4">
-                        <i class="fas fa-fire mr-2 text-orange-500"></i>Detalles Térmica
-                    </h3>
-                    <p class="text-gray-600 text-sm mb-4">La energía solar térmica aprovecha el calor del sol para calentar agua u otros fluidos, siendo ideal para aplicaciones de calefacción, agua caliente sanitaria o climatización de piscinas.</p>
-
-                    <div class="mb-5">
-                        <label class="block text-gray-700 text-sm font-medium mb-2">
-                            Interés principal en el proyecto <span class="text-red-500">*</span>
-                        </label>
-                        <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
-                            <label class="flex items-center p-4 border border-gray-300 rounded-lg hover:border-blue-500 cursor-pointer">
-                                <input type="radio" name="thermalInterest" value="Calefacción/Climatización" class="h-5 w-5 text-blue-500 focus:ring-yellow-500">
-                                <span class="ml-3 text-gray-700">Calefacción/Climatización</span>
-                            </label>
-                            <label class="flex items-center p-4 border border-gray-300 rounded-lg hover:border-blue-500 cursor-pointer">
-                                <input type="radio" name="thermalInterest" value="Agua caliente sanitaria" class="h-5 w-5 text-blue-500 focus:ring-yellow-500">
-                                <span class="ml-3 text-gray-700">Agua caliente sanitaria</span>
-                            </label>
-                            <label class="flex items-center p-4 border border-gray-300 rounded-lg hover:border-blue-500 cursor-pointer">
-                                <input type="radio" name="thermalInterest" value="Climatización de piscina" class="h-5 w-5 text-blue-500 focus:ring-yellow-500">
-                                <span class="ml-3 text-gray-700">Climatización de piscina</span>
-                            </label>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="flex justify-between mt-10 pt-5 border-t border-gray-200">
-                        <button type="button" onclick="prevSection('section1')" class="text-gray-600 font-medium px-6 py-3 rounded-lg hover:bg-gray-100 transition duration-300">
-                            <i class="fas fa-arrow-left mr-2"></i> Anterior
-                        </button>
-                        <button type="button" onclick="nextSection('section3')" class="bg-yellow-500 text-white font-medium px-6 py-3 rounded-lg hover:bg-yellow-600 transition duration-300 btn-next">
-                            Siguiente <i class="fas fa-arrow-right ml-2"></i>
-                        </button>
-                    </div>
-                </div>
-
-                <!-- Sección 3: Ubicación -->
-                <div id="section3" class="form-section">
-                    <h2 class="text-2xl font-bold text-gray-800 mb-6 border-b pb-3">
-                        <i class="fas fa-map-marker-alt mr-2 text-red-500"></i>Ubicación y Características
-                    </h2>
-
-                    <div class="mb-6">
-                        <h3 class="text-lg font-medium text-gray-800 mb-4">Dirección completa <span class="text-red-500">*</span></h3>
-
-                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
-                            <div>
-                                <label class="block text-gray-700 text-sm font-medium mb-2" for="street">
-                                    Calle y número <span class="text-red-500">*</span>
-                                </label>
-                                <input type="text" id="street" name="street" required class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-yellow-500" placeholder="Ej: Av. Corrientes 1234">
-                            </div>
-
-                            <div>
-                                <label class="block text-gray-700 text-sm font-medium mb-2" for="postalCode">
-                                    Código postal <span class="text-red-500">*</span>
-                                </label>
-                                <input type="text" id="postalCode" name="postalCode" required class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-yellow-500" placeholder="Ej: 1000">
-                            </div>
-                        </div>
-
-                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                            <div>
-                                <label class="block text-gray-700 text-sm font-medium mb-2" for="city">
-                                    Ciudad <span class="text-red-500">*</span>
-                                </label>
-                                <input type="text" id="city" name="city" required class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-yellow-500" placeholder="Ej: Buenos Aires">
-                            </div>
-
-                            <div>
-                                <label class="block text-gray-700 text-sm font-medium mb-2" for="province">
-                                    Provincia <span class="text-red-500">*</span>
-                                </label>
-                                <input type="text" id="province" name="province" required class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-yellow-500" placeholder="Ej: Buenos Aires">
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="mb-6">
-                        <label class="block text-gray-700 text-sm font-medium mb-2">
-                            Orientación del área de instalación <span class="text-red-500">*</span>
-                        </label>
-                        <p class="text-gray-600 text-sm mb-4">Selecciona la orientación principal del techo o área donde se instalarán los paneles solares. Puedes usar la brújula de tu dispositivo móvil para determinar esta orientación.</p>
-
-                        <div class="compass">
-                            <div class="compass-item" data-direction="Noroeste">NO</div>
-                            <div class="compass-item" data-direction="Norte">N</div>
-                            <div class="compass-item" data-direction="Noreste">NE</div>
-                            <div class="compass-item" data-direction="Oeste">O</div>
-                            <div class="flex items-center justify-center text-gray-500">
-                                <i class="fas fa-compass text-2xl"></i>
-                            </div>
-                            <div class="compass-item" data-direction="Este">E</div>
-                            <div class="compass-item" data-direction="Suroeste">SO</div>
-                            <div class="compass-item" data-direction="Sur">S</div>
-                            <div class="compass-item" data-direction="Sureste">SE</div>
-                        </div>
-                        <input type="hidden" id="orientation" name="orientation">
-                    </div>
-
-                    <div class="flex justify-between mt-10 pt-5 border-t border-gray-200">
-                        <button type="button" onclick="prevSection('section2')" class="text-gray-600 font-medium px-6 py-3 rounded-lg hover:bg-gray-100 transition duration-300">
-                            <i class="fas fa-arrow-left mr-2"></i> Anterior
-                        </button>
-                        <button type="button" onclick="nextSection('section4')" class="bg-yellow-500 text-white font-medium px-6 py-3 rounded-lg hover:bg-yellow-600 transition duration-300 btn-next">
-                            Siguiente <i class="fas fa-arrow-right ml-2"></i>
-                        </button>
-                    </div>
-                </div>
-
-                <!-- Sección 4: Plazos -->
-                <div id="section4" class="form-section">
-                    <h2 class="text-2xl font-bold text-gray-800 mb-6 border-b pb-3">
-                        <i class="fas fa-calendar-alt mr-2 text-purple-500"></i>Plazos y Comentarios
-                    </h2>
-
-                    <div class="mb-6">
-                        <label class="block text-gray-700 text-sm font-medium mb-2">
-                            Fecha estimada de inicio del proyecto <span class="text-red-500">*</span>
-                        </label>
-                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                            <label class="flex items-center p-4 border border-gray-300 rounded-lg hover:border-blue-500 cursor-pointer">
-                                <input type="radio" name="startDate" value="Inmediato" class="h-5 w-5 text-blue-500 focus:ring-yellow-500" required>
-                                <span class="ml-3 text-gray-700 font-medium">A la brevedad / Lo antes posible</span>
-                            </label>
-                            <label class="flex items-center p-4 border border-gray-300 rounded-lg hover:border-blue-500 cursor-pointer">
-                                <input type="radio" name="startDate" value="1-3 meses" class="h-5 w-5 text-blue-500 focus:ring-yellow-500">
-                                <span class="ml-3 text-gray-700 font-medium">Dentro de 1 a 3 meses</span>
-                            </label>
-                            <label class="flex items-center p-4 border border-gray-300 rounded-lg hover:border-blue-500 cursor-pointer">
-                                <input type="radio" name="startDate" value="4-6 meses" class="h-5 w-5 text-blue-500 focus:ring-yellow-500">
-                                <span class="ml-3 text-gray-700 font-medium">Dentro de 4 a 6 meses</span>
-                            </label>
-                            <label class="flex items-center p-4 border border-gray-300 rounded-lg hover:border-blue-500 cursor-pointer">
-                                <input type="radio" name="startDate" value="Más de 6 meses" class="h-5 w-5 text-blue-500 focus:ring-yellow-500">
-                                <span class="ml-3 text-gray-700 font-medium">Más de 6 meses</span>
-                            </label>
-                        </div>
-                    </div>
-
-                    <div class="mb-6">
-                        <label class="block text-gray-700 text-sm font-medium mb-2" for="comments">
-                            Comentarios adicionales o detalles relevantes
-                        </label>
-                        <textarea id="comments" name="comments" rows="4" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-yellow-500" placeholder="Por favor, incluya cualquier información adicional que considere importante..."></textarea>
-                    </div>
-
-                    <div class="flex justify-between mt-10 pt-5 border-t border-gray-200">
-                        <button type="button" onclick="prevSection('section3')" class="text-gray-600 font-medium px-6 py-3 rounded-lg hover:bg-gray-100 transition duration-300">
-                            <i class="fas fa-arrow-left mr-2"></i> Anterior
-                        </button>
-                        <button type="submit" id="submitForm" class="bg-green-600 text-white font-medium px-6 py-3 rounded-lg hover:bg-green-700 transition duration-300 btn-next">
-                            Enviar Formulario <i class="fas fa-paper-plane ml-2"></i>
-                        </button>
-                    </div>
-                </div>
-
-                <!-- Sección 5: Confirmación -->
-                <div id="section5" class="form-section">
-                    <div class="text-center py-12">
-                        <div class="mx-auto flex items-center justify-center h-16 w-16 rounded-full success-icon mb-6">
-                            <i class="fas fa-check text-green-600 text-2xl"></i>
-                        </div>
-                        <h2 class="text-2xl font-bold text-gray-800 mb-4">¡Formulario enviado con éxito!</h2>
-                        <p class="text-gray-600 mb-6 max-w-lg mx-auto">
-                            Se le asignará tu consulta a un agente especializado que se pondrá en contacto contigo en las próximas 24-48 horas.
-                        </p>
-                        
-                        <div class="flex flex-col sm:flex-row justify-center gap-4">
-                            <a href="https://www.hissuma-materiales.com.ar/" class="bg-green-600 text-white font-medium px-6 py-3 rounded-lg hover:bg-green-700 transition duration-300 btn-next">
-                                Ver productos Hissuma
-                            </a>
-                            <button type="button" onclick="location.reload()" class="bg-white text-gray-700 font-medium px-6 py-3 rounded-lg border border-gray-300 hover:bg-gray-50 transition duration-300">
-                                <i class="fas fa-redo mr-2"></i> Enviar otro formulario
-                            </button>
-                        </div>
-                    </div>
-                </div>
-            </form>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-5 mb-5">
+          <div>
+            <label class="block text-gray-700 text-sm font-medium mb-2" for="email">Correo electrónico <span class="text-red-500">*</span></label>
+            <input type="email" id="email" name="email" required class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-yellow-500">
+          </div>
+          <div>
+            <label class="block text-gray-700 text-sm font-medium mb-2" for="phone">Teléfono de contacto <span class="text-red-500">*</span></label>
+            <input type="tel" id="phone" name="phone" required class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-yellow-500">
+          </div>
         </div>
 
-        <script>
-            // Variables globales
-            let currentSection = 1;
-            const totalSections = 5; // Actualizado a 5 secciones
+        <div class="mb-5">
+          <label class="block text-gray-700 text-sm font-medium mb-2">Tipo de proyecto <span class="text-red-500">*</span></label>
+          <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
+            <label class="choice-tile p-4 border border-gray-300 rounded-lg hover:border-blue-500 cursor-pointer">
+              <input type="radio" name="projectType" value="Hogar" class="h-5 w-5 text-blue-500 focus:ring-yellow-500" required>
+              <span class="text-gray-700 font-medium">Hogar</span>
+            </label>
+            <label class="choice-tile p-4 border border-gray-300 rounded-lg hover:border-blue-500 cursor-pointer">
+              <input type="radio" name="projectType" value="Negocio" class="h-5 w-5 text-blue-500 focus:ring-yellow-500">
+              <span class="text-gray-700 font-medium">Negocio</span>
+            </label>
+            <label class="choice-tile p-4 border border-gray-300 rounded-lg hover:border-blue-500 cursor-pointer">
+              <input type="radio" name="projectType" value="Industria" class="h-5 w-5 text-blue-500 focus:ring-yellow-500">
+              <span class="text-gray-700 font-medium">Industria</span>
+            </label>
+          </div>
+        </div>
 
-            // Actualizar indicador de progreso
-            function updateProgress() {
-                const progressFill = document.getElementById('progressFill');
-                const progressPercentage = (currentSection / totalSections) * 100;
-                progressFill.style.width = `${progressPercentage}%`;
+        <div class="flex justify-between mt-10 pt-5 border-t border-gray-200">
+          <div></div>
+          <button type="button" onclick="nextSection('section2')" class="bg-yellow-500 text-white font-medium px-6 py-3 rounded-lg hover:bg-yellow-600 transition duration-300 btn-next">
+            Siguiente <i class="fas fa-arrow-right ml-2"></i>
+          </button>
+        </div>
+      </div>
 
-                // Actualizar indicadores de sección
-                for(let i = 1; i <= 5; i++) {
-                    const step = document.getElementById(`step${i}`);
-                    const mobileStep = document.querySelector(`.mobile-step[data-step="${i}"]`);
+      <!-- 2. Tecnología -->
+      <div id="section2" class="form-section">
+        <h2 class="text-2xl font-bold text-gray-800 mb-6 border-b pb-3">
+          <i class="fas fa-solar-panel mr-2 text-blue-500"></i>Tecnología a utilizar
+        </h2>
 
-                    if (i === currentSection) {
-                        if (step) step.classList.add('active');
-                        if (mobileStep) mobileStep.classList.add('active');
-                    } else {
-                        if (step) step.classList.remove('active');
-                        if (mobileStep) mobileStep.classList.remove('active');
-                    }
-                }
-            }
+        <div class="mb-8">
+          <label class="block text-gray-700 text-sm font-medium mb-2">Seleccione la tecnología principal <span class="text-red-500">*</span></label>
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <label id="techFotovoltaica" class="choice-tile flex-col p-5 border-2 border-gray-300 rounded-xl hover:border-blue-500 cursor-pointer">
+              <div class="choice-tile">
+                <input type="radio" name="technology" value="Fotovoltaica" class="h-5 w-5 text-blue-500 focus:ring-yellow-500" required>
+                <span class="text-gray-800 font-bold text-lg">Fotovoltaica</span>
+              </div>
+              <p class="mt-2 text-gray-600 text-sm pl-8">Generación de electricidad, ahorro en la factura, bombeo solar de agua</p>
+            </label>
 
-            // Navegar entre secciones
-            function changeSection(sectionId) {
-                // Ocultar todas las secciones
-                const sections = document.getElementsByClassName('form-section');
-                for(let i = 0; i < sections.length; i++) {
-                    sections[i].classList.remove('active');
-                }
+            <label id="techTermica" class="choice-tile flex-col p-5 border-2 border-gray-300 rounded-xl hover:border-blue-500 cursor-pointer">
+              <div class="choice-tile">
+                <input type="radio" name="technology" value="Térmica" class="h-5 w-5 text-blue-500 focus:ring-yellow-500">
+                <span class="text-gray-800 font-bold text-lg">Térmica</span>
+              </div>
+              <p class="mt-2 text-gray-600 text-sm pl-8">Calefacción, agua caliente sanitaria, climatización de piscinas</p>
+            </label>
+          </div>
+        </div>
 
-                // Mostrar sección actual
-                document.getElementById(sectionId).classList.add('active');
+        <!-- Fotovoltaica Detalles -->
+        <div id="fotovoltaicaDetails" class="hidden mb-5 bg-gray-50 p-5 rounded-xl">
+          <h3 class="text-lg font-bold text-gray-800 mb-4"><i class="fas fa-bolt mr-2 text-blue-500"></i>Detalles Fotovoltaica</h3>
 
-                // Actualizar sección actual
-                currentSection = parseInt(sectionId.replace('section', ''));
+          <div class="mb-5">
+            <label class="block text-gray-700 text-sm font-medium mb-2">Modalidad de conexión <span class="text-red-500">*</span></label>
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+              <label class="choice-tile p-4 border border-gray-300 rounded-lg hover:border-blue-500 cursor-pointer">
+                <input type="radio" name="connectionMode" value="On-grid" class="h-5 w-5 text-blue-500 focus:ring-yellow-500">
+                <span class="text-gray-700 font-medium">On-grid (Conectado a la red)</span>
+              </label>
+              <label class="choice-tile p-4 border border-gray-300 rounded-lg hover:border-blue-500 cursor-pointer">
+                <input type="radio" name="connectionMode" value="Off-grid" class="h-5 w-5 text-blue-500 focus:ring-yellow-500">
+                <span class="text-gray-700 font-medium">Off-grid (Sistema autónomo)</span>
+              </label>
+            </div>
+          </div>
 
-                // Actualizar progreso
-                updateProgress();
+          <div id="onGridDetails" class="hidden grid grid-cols-1 sm:grid-cols-2 gap-4 mb-5">
+            <div>
+              <label class="block text-gray-700 text-sm font-medium mb-2" for="configType">Configuración eléctrica <span class="text-red-500">*</span></label>
+              <select id="configType" name="configType" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-yellow-500">
+                <option value="">Seleccione...</option>
+                <option value="Monofásico">Monofásico</option>
+                <option value="Trifásico">Trifásico</option>
+              </select>
+            </div>
+          </div>
 
-                // Scroll al inicio de la sección
-                window.scrollTo(0, 0);
-            }
+          <div class="bg-white p-4 rounded-lg mb-5">
+            <label class="block text-gray-700 text-sm font-medium mb-2">Consumo estimado</label>
+            <p class="text-gray-600 text-xs mb-3">Puedes encontrar el valor de kWh en tu factura de electricidad, generalmente en la sección de "Detalle de consumo".</p>
 
-            function nextSection(nextId) {
-                // Validar sección actual antes de cambiar
-                if (currentSection === 1) {
-                    if (!validateSection1()) return;
-                } else if (currentSection === 2) {
-                    if (!validateSection2()) return;
-                } else if (currentSection === 3) {
-                    if (!validateSection3()) return;
-                } else if (currentSection === 4) {
-                    if (!validateSection4()) return;
-                }
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <div>
+                <label class="block text-gray-700 text-sm mb-2" for="invoiceAmount">Monto promedio de la factura</label>
+                <div class="relative">
+                  <div class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none text-gray-500">$</div>
+                  <input type="text" id="invoiceAmount" name="invoiceAmount" class="w-full pl-8 pr-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-yellow-500" placeholder="0.00">
+                </div>
+              </div>
+              <div>
+                <label class="block text-gray-700 text-sm mb-2" for="kwhConsumption">Consumo promedio (kWh mensuales)</label>
+                <div class="relative">
+                  <input type="text" id="kwhConsumption" name="kwhConsumption" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-yellow-500" placeholder="0">
+                  <div class="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none text-gray-500">kWh</div>
+                </div>
+              </div>
+            </div>
 
-                const nextSectionNum = parseInt(nextId.replace('section', ''));
-                changeSection(nextId);
-            }
+            <!-- BLOQUE DE ADJUNTAR FACTURA ELIMINADO -->
+          </div>
 
-            function prevSection(prevId) {
-                changeSection(prevId);
-            }
+          <div id="offGridDetails" class="hidden bg-white p-4 rounded-lg">
+            <h4 class="text-md font-bold text-gray-800 mb-3"><i class="fas fa-water mr-2 text-blue-500"></i>Sistema de bombeo solar</h4>
+            <p class="text-gray-600 text-sm mb-3">La energía solar fotovoltaica también puede utilizarse para sistemas de bombeo de agua, ideal para zonas rurales o donde no llega la red eléctrica.</p>
 
-            // Validadores de secciones
-            function validateSection1() {
-                const fullname = document.getElementById('fullname').value.trim();
-                const email = document.getElementById('email').value.trim();
-                const phone = document.getElementById('phone').value.trim();
-                const projectType = document.querySelector('input[name="projectType"]:checked');
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <div>
+                <label class="block text-gray-700 text-sm mb-2" for="wellDepth">Profundidad del pozo (metros)</label>
+                <div class="relative">
+                  <input type="text" id="wellDepth" name="wellDepth" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-yellow-500" placeholder="0">
+                  <div class="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none text-gray-500">m</div>
+                </div>
+              </div>
+              <div>
+                <label class="block text-gray-700 text-sm mb-2" for="waterLiters">Litros de agua a extraer por día</label>
+                <div class="relative">
+                  <input type="text" id="waterLiters" name="waterLiters" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-yellow-500" placeholder="0">
+                  <div class="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none text-gray-500">L</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
 
-                if (!fullname || !email || !phone || !projectType) {
-                    alert('Por favor completa todos los campos obligatorios en la sección de Datos Generales.');
-                    return false;
-                }
+        <!-- Térmica Detalles -->
+        <div id="termicaDetails" class="hidden mb-5 bg-gray-50 p-5 rounded-xl">
+          <h3 class="text-lg font-bold text-gray-800 mb-4"><i class="fas fa-fire mr-2 text-orange-500"></i>Detalles Térmica</h3>
+          <p class="text-gray-600 text-sm mb-4">La energía solar térmica aprovecha el calor del sol para calentar agua u otros fluidos, siendo ideal para aplicaciones de calefacción, agua caliente sanitaria o climatización de piscinas.</p>
 
-                // Validar email con expresión regular simple
-                const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-                if (!emailRegex.test(email)) {
-                    alert('Por favor ingresa un email válido.');
-                    return false;
-                }
+          <div class="mb-5">
+            <label class="block text-gray-700 text-sm font-medium mb-2">Interés principal en el proyecto <span class="text-red-500">*</span></label>
+            <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
+              <label class="choice-tile p-4 border border-gray-300 rounded-lg hover:border-blue-500 cursor-pointer">
+                <input type="radio" name="thermalInterest" value="Calefacción/Climatización" class="h-5 w-5 text-blue-500 focus:ring-yellow-500">
+                <span class="text-gray-700 text-sm leading-snug">Calefacción/Climatización</span>
+              </label>
+              <label class="choice-tile p-4 border border-gray-300 rounded-lg hover:border-blue-500 cursor-pointer">
+                <input type="radio" name="thermalInterest" value="Agua caliente sanitaria" class="h-5 w-5 text-blue-500 focus:ring-yellow-500">
+                <span class="text-gray-700 text-sm leading-snug">Agua caliente sanitaria</span>
+              </label>
+              <label class="choice-tile p-4 border border-gray-300 rounded-lg hover:border-blue-500 cursor-pointer">
+                <input type="radio" name="thermalInterest" value="Climatización de piscina" class="h-5 w-5 text-blue-500 focus:ring-yellow-500">
+                <span class="text-gray-700 text-sm leading-snug">Climatización de piscina</span>
+              </label>
+            </div>
+          </div>
+        </div>
 
-                return true;
-            }
+        <div class="flex justify-between mt-10 pt-5 border-t border-gray-200">
+          <button type="button" onclick="prevSection('section1')" class="text-gray-600 font-medium px-6 py-3 rounded-lg hover:bg-gray-100 transition duration-300">
+            <i class="fas fa-arrow-left mr-2"></i> Anterior
+          </button>
+          <button type="button" onclick="nextSection('section3')" class="bg-yellow-500 text-white font-medium px-6 py-3 rounded-lg hover:bg-yellow-600 transition duration-300 btn-next">
+            Siguiente <i class="fas fa-arrow-right ml-2"></i>
+          </button>
+        </div>
+      </div>
 
-            function validateSection2() {
-                const technology = document.querySelector('input[name="technology"]:checked');
+      <!-- 3. Ubicación -->
+      <div id="section3" class="form-section">
+        <h2 class="text-2xl font-bold text-gray-800 mb-6 border-b pb-3"><i class="fas fa-map-marker-alt mr-2 text-red-500"></i>Ubicación y Características</h2>
 
-                if (!technology) {
-                    alert('Por favor selecciona una tecnología.');
-                    return false;
-                }
+        <div class="mb-6">
+          <h3 class="text-lg font-medium text-gray-800 mb-4">Dirección completa <span class="text-red-500">*</span></h3>
 
-                // Validación para Fotovoltaica
-                if (technology.value === 'Fotovoltaica') {
-                    const connectionMode = document.querySelector('input[name="connectionMode"]:checked');
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+            <div>
+              <label class="block text-gray-700 text-sm font-medium mb-2" for="street">Calle y número <span class="text-red-500">*</span></label>
+              <input type="text" id="street" name="street" required class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-yellow-500" placeholder="Ej: Av. Corrientes 1234">
+            </div>
+            <div>
+              <label class="block text-gray-700 text-sm font-medium mb-2" for="postalCode">Código postal <span class="text-red-500">*</span></label>
+              <input type="text" id="postalCode" name="postalCode" required class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-yellow-500" placeholder="Ej: 1000">
+            </div>
+          </div>
 
-                    if (!connectionMode) {
-                        alert('Por favor selecciona una modalidad de conexión.');
-                        return false;
-                    }
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div>
+              <label class="block text-gray-700 text-sm font-medium mb-2" for="city">Ciudad <span class="text-red-500">*</span></label>
+              <input type="text" id="city" name="city" required class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-yellow-500" placeholder="Ej: Buenos Aires">
+            </div>
+            <div>
+              <label class="block text-gray-700 text-sm font-medium mb-2" for="province">Provincia <span class="text-red-500">*</span></label>
+              <input type="text" id="province" name="province" required class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-yellow-500" placeholder="Ej: Buenos Aires">
+            </div>
+          </div>
+        </div>
 
-                    if (connectionMode.value === 'On-grid') {
-                        const configType = document.getElementById('configType').value;
-                        if (!configType) {
-                            alert('Por favor selecciona una configuración eléctrica.');
-                            return false;
-                        }
-                    }
-                } else if (technology.value === 'Térmica') {
-                    const thermalInterest = document.querySelector('input[name="thermalInterest"]:checked');
-                    if (!thermalInterest) {
-                        alert('Por favor selecciona tu interés principal.');
-                        return false;
-                    }
-                }
+        <div class="mb-6">
+          <label class="block text-gray-700 text-sm font-medium mb-2">Orientación del área de instalación <span class="text-red-500">*</span></label>
+          <p class="text-gray-600 text-sm mb-4">Selecciona la orientación principal del techo o área donde se instalarán los paneles solares. Puedes usar la brújula de tu dispositivo móvil para determinar esta orientación.</p>
 
-                return true;
-            }
+          <div class="compass">
+            <div class="compass-item" data-direction="Noroeste">NO</div>
+            <div class="compass-item" data-direction="Norte">N</div>
+            <div class="compass-item" data-direction="Noreste">NE</div>
+            <div class="compass-item" data-direction="Oeste">O</div>
+            <div class="flex items-center justify-center text-gray-500"><i class="fas fa-compass text-2xl"></i></div>
+            <div class="compass-item" data-direction="Este">E</div>
+            <div class="compass-item" data-direction="Suroeste">SO</div>
+            <div class="compass-item" data-direction="Sur">S</div>
+            <div class="compass-item" data-direction="Sureste">SE</div>
+          </div>
+          <input type="hidden" id="orientation" name="orientation">
+        </div>
 
-            function validateSection3() {
-                const street = document.getElementById('street').value.trim();
-                const postalCode = document.getElementById('postalCode').value.trim();
-                const city = document.getElementById('city').value.trim();
-                const province = document.getElementById('province').value.trim();
-                const orientation = document.getElementById('orientation').value;
+        <div class="flex justify-between mt-10 pt-5 border-t border-gray-200">
+          <button type="button" onclick="prevSection('section2')" class="text-gray-600 font-medium px-6 py-3 rounded-lg hover:bg-gray-100 transition duration-300">
+            <i class="fas fa-arrow-left mr-2"></i> Anterior
+          </button>
+          <button type="button" onclick="nextSection('section4')" class="bg-yellow-500 text-white font-medium px-6 py-3 rounded-lg hover:bg-yellow-600 transition duration-300 btn-next">
+            Siguiente <i class="fas fa-arrow-right ml-2"></i>
+          </button>
+        </div>
+      </div>
 
-                if (!street || !postalCode || !city || !province) {
-                    alert('Por favor completa todos los campos obligatorios en la sección de Ubicación.');
-                    return false;
-                }
+      <!-- 4. Plazos -->
+      <div id="section4" class="form-section">
+        <h2 class="text-2xl font-bold text-gray-800 mb-6 border-b pb-3"><i class="fas fa-calendar-alt mr-2 text-purple-500"></i>Plazos y Comentarios</h2>
 
-                if (!orientation) {
-                    alert('Por favor selecciona la orientación del área de instalación.');
-                    return false;
-                }
+        <div class="mb-6">
+          <label class="block text-gray-700 text-sm font-medium mb-2">Fecha estimada de inicio del proyecto <span class="text-red-500">*</span></label>
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+            <label class="choice-tile p-4 border border-gray-300 rounded-lg hover:border-blue-500 cursor-pointer">
+              <input type="radio" name="startDate" value="Inmediato" class="h-5 w-5 text-blue-500 focus:ring-yellow-500" required>
+              <span class="text-gray-700 font-medium">A la brevedad / Lo antes posible</span>
+            </label>
+            <label class="choice-tile p-4 border border-gray-300 rounded-lg hover:border-blue-500 cursor-pointer">
+              <input type="radio" name="startDate" value="1-3 meses" class="h-5 w-5 text-blue-500 focus:ring-yellow-500">
+              <span class="text-gray-700 font-medium">Dentro de 1 a 3 meses</span>
+            </label>
+            <label class="choice-tile p-4 border border-gray-300 rounded-lg hover:border-blue-500 cursor-pointer">
+              <input type="radio" name="startDate" value="4-6 meses" class="h-5 w-5 text-blue-500 focus:ring-yellow-500">
+              <span class="text-gray-700 font-medium">Dentro de 4 a 6 meses</span>
+            </label>
+            <label class="choice-tile p-4 border border-gray-300 rounded-lg hover:border-blue-500 cursor-pointer">
+              <input type="radio" name="startDate" value="Más de 6 meses" class="h-5 w-5 text-blue-500 focus:ring-yellow-500">
+              <span class="text-gray-700 font-medium">Más de 6 meses</span>
+            </label>
+          </div>
+        </div>
 
-                return true;
-            }
-            
-            function validateSection4() {
-                const startDate = document.querySelector('input[name="startDate"]:checked');
-                
-                if (!startDate) {
-                    alert('Por favor selecciona una fecha estimada de inicio.');
-                    return false;
-                }
-                
-                return true;
-            }
+        <div class="mb-6">
+          <label class="block text-gray-700 text-sm font-medium mb-2" for="comments">Comentarios adicionales o detalles relevantes</label>
+          <textarea id="comments" name="comments" rows="4" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-yellow-500" placeholder="Por favor, incluya cualquier información adicional que considere importante..."></textarea>
+        </div>
 
-            // Manejar la visibilidad de detalles según tecnología seleccionada
-            function handleTechnologyChange() {
-                const fotovoltaicaOption = document.getElementById('techFotovoltaica');
-                const termicaOption = document.getElementById('techTermica');
+        <div class="flex justify-between mt-10 pt-5 border-t border-gray-200">
+          <button type="button" onclick="prevSection('section3')" class="text-gray-600 font-medium px-6 py-3 rounded-lg hover:bg-gray-100 transition duration-300">
+            <i class="fas fa-arrow-left mr-2"></i> Anterior
+          </button>
+          <button type="submit" id="submitForm" class="bg-green-600 text-white font-medium px-6 py-3 rounded-lg hover:bg-green-700 transition duration-300 btn-next">
+            Enviar Formulario <i class="fas fa-paper-plane ml-2"></i>
+          </button>
+        </div>
+      </div>
 
-                fotovoltaicaOption.addEventListener('click', () => {
-                    document.getElementById('fotovoltaicaDetails').classList.remove('hidden');
-                    document.getElementById('termicaDetails').classList.add('hidden');
-                });
+      <!-- 5. Confirmación -->
+      <div id="section5" class="form-section">
+        <div class="text-center py-12">
+          <div class="mx-auto flex items-center justify-center h-16 w-16 rounded-full success-icon mb-6">
+            <i class="fas fa-check text-green-600 text-2xl"></i>
+          </div>
+          <h2 class="text-2xl font-bold text-gray-800 mb-4">¡Formulario enviado con éxito!</h2>
+          <p class="text-gray-600 mb-6 max-w-lg mx-auto">
+            Se le asignará tu consulta a un agente especializado que se pondrá en contacto contigo en las próximas 24-48 horas.
+          </p>
+          <div class="flex flex-col sm:flex-row justify-center gap-4">
+            <a href="https://www.hissuma-materiales.com.ar/" class="bg-green-600 text-white font-medium px-6 py-3 rounded-lg hover:bg-green-700 transition duration-300 btn-next">
+              Ver productos Hissuma
+            </a>
+            <button type="button" onclick="location.reload()" class="bg-white text-gray-700 font-medium px-6 py-3 rounded-lg border border-gray-300 hover:bg-gray-50 transition duration-300">
+              <i class="fas fa-redo mr-2"></i> Enviar otro formulario
+            </button>
+          </div>
+        </div>
+      </div>
+    </form>
+  </div>
 
-                termicaOption.addEventListener('click', () => {
-                    document.getElementById('termicaDetails').classList.remove('hidden');
-                    document.getElementById('fotovoltaicaDetails').classList.add('hidden');
-                });
-            }
+  <script>
+    // Estado
+    let currentSection = 1;
+    const totalSections = 5;
 
-            // Manejar cambios en modalidad de conexión
-            function handleConnectionModeChange() {
-                const connectionModes = document.querySelectorAll('input[name="connectionMode"]');
+    function updateProgress(){
+      const progressFill = document.getElementById('progressFill');
+      const pct = (currentSection/totalSections)*100;
+      progressFill.style.width = pct+'%';
+      for(let i=1;i<=5;i++){
+        const step = document.getElementById(`step${i}`);
+        const mobileStep = document.querySelector(`.mobile-step[data-step="${i}"]`);
+        if(step) step.classList.toggle('active', i===currentSection);
+        if(mobileStep) mobileStep.classList.toggle('active', i===currentSection);
+      }
+    }
 
-                connectionModes.forEach(mode => {
-                    mode.addEventListener('change', () => {
-                        if (mode.value === 'On-grid') {
-                            document.getElementById('onGridDetails').classList.remove('hidden');
-                            document.getElementById('offGridDetails').classList.add('hidden');
-                        } else if (mode.value === 'Off-grid') {
-                            document.getElementById('offGridDetails').classList.remove('hidden');
-                            document.getElementById('onGridDetails').classList.add('hidden');
-                        }
-                    });
-                });
-            }
+    function changeSection(id){
+      [...document.getElementsByClassName('form-section')].forEach(s=>s.classList.remove('active'));
+      document.getElementById(id).classList.add('active');
+      currentSection = parseInt(id.replace('section',''));
+      updateProgress();
+      window.scrollTo(0,0);
+    }
 
-            // Manejar brújula de orientación
-            function setupCompass() {
-                const compassItems = document.querySelectorAll('.compass-item');
-                const orientationInput = document.getElementById('orientation');
+    function nextSection(id){
+      if(currentSection===1 && !validateSection1()) return;
+      if(currentSection===2 && !validateSection2()) return;
+      if(currentSection===3 && !validateSection3()) return;
+      if(currentSection===4 && !validateSection4()) return;
+      changeSection(id);
+    }
+    function prevSection(id){ changeSection(id); }
 
-                compassItems.forEach(item => {
-                    item.addEventListener('click', () => {
-                        // Remover selección previa
-                        document.querySelectorAll('.compass-item').forEach(i => {
-                            i.classList.remove('selected');
-                        });
+    // Validaciones
+    function validateSection1(){
+      const fullname = document.getElementById('fullname').value.trim();
+      const email = document.getElementById('email').value.trim();
+      const phone = document.getElementById('phone').value.trim();
+      const projectType = document.querySelector('input[name="projectType"]:checked');
+      if(!fullname||!email||!phone||!projectType){ alert('Completá los campos obligatorios.'); return false; }
+      const emailRegex=/^[^\s@]+@[^\s@]+\.[^\s@]+$/; if(!emailRegex.test(email)){ alert('Email inválido.'); return false; }
+      return true;
+    }
+    function validateSection2(){
+      const tech = document.querySelector('input[name="technology"]:checked');
+      if(!tech){ alert('Seleccioná una tecnología.'); return false; }
+      if(tech.value==='Fotovoltaica'){
+        const mode = document.querySelector('input[name="connectionMode"]:checked');
+        if(!mode){ alert('Seleccioná modalidad de conexión.'); return false; }
+        if(mode.value==='On-grid'){
+          const cfg = document.getElementById('configType').value;
+          if(!cfg){ alert('Seleccioná configuración eléctrica.'); return false; }
+        }
+      } else {
+        const th = document.querySelector('input[name="thermalInterest"]:checked');
+        if(!th){ alert('Seleccioná tu interés principal.'); return false; }
+      }
+      return true;
+    }
+    function validateSection3(){
+      const street = document.getElementById('street').value.trim();
+      const postalCode = document.getElementById('postalCode').value.trim();
+      const city = document.getElementById('city').value.trim();
+      const province = document.getElementById('province').value.trim();
+      const orientation = document.getElementById('orientation').value;
+      if(!street||!postalCode||!city||!province){ alert('Completá la dirección.'); return false; }
+      if(!orientation){ alert('Seleccioná la orientación.'); return false; }
+      return true;
+    }
+    function validateSection4(){
+      const startDate = document.querySelector('input[name="startDate"]:checked');
+      if(!startDate){ alert('Seleccioná una fecha estimada de inicio.'); return false; }
+      return true;
+    }
 
-                        // Seleccionar elemento actual
-                        item.classList.add('selected');
+    // UI dinam.
+    function handleTechnologyChange(){
+      document.getElementById('techFotovoltaica').addEventListener('click', ()=>{
+        document.getElementById('fotovoltaicaDetails').classList.remove('hidden');
+        document.getElementById('termicaDetails').classList.add('hidden');
+      });
+      document.getElementById('techTermica').addEventListener('click', ()=>{
+        document.getElementById('termicaDetails').classList.remove('hidden');
+        document.getElementById('fotovoltaicaDetails').classList.add('hidden');
+      });
+    }
+    function handleConnectionModeChange(){
+      document.querySelectorAll('input[name="connectionMode"]').forEach(mode=>{
+        mode.addEventListener('change', ()=>{
+          if(mode.value==='On-grid'){
+            document.getElementById('onGridDetails').classList.remove('hidden');
+            document.getElementById('offGridDetails').classList.add('hidden');
+          } else {
+            document.getElementById('offGridDetails').classList.remove('hidden');
+            document.getElementById('onGridDetails').classList.add('hidden');
+          }
+        });
+      });
+    }
+    function setupCompass(){
+      const orientationInput = document.getElementById('orientation');
+      document.querySelectorAll('.compass-item').forEach(item=>{
+        item.addEventListener('click', ()=>{
+          document.querySelectorAll('.compass-item').forEach(i=>i.classList.remove('selected'));
+          item.classList.add('selected');
+          orientationInput.value = item.dataset.direction;
+        });
+      });
+    }
+    function setupMobileSteps(){
+      document.querySelectorAll('.mobile-step').forEach(step=>{
+        step.addEventListener('click', ()=>{
+          const n = parseInt(step.dataset.step);
+          const ok = currentSection< n ? validateCurrentSection(): true;
+          if(n<currentSection || ok){ changeSection(`section${n}`); }
+        });
+      });
+    }
+    function validateCurrentSection(){
+      if(currentSection===1) return validateSection1();
+      if(currentSection===2) return validateSection2();
+      if(currentSection===3) return validateSection3();
+      if(currentSection===4) return validateSection4();
+      return true;
+    }
 
-                        // Guardar valor
-                        orientationInput.value = item.dataset.direction;
-                    });
-                });
-            }
+    // Submit
+    document.getElementById('projectForm').addEventListener('submit', function(e){
+      e.preventDefault();
+      if(currentSection===4){
+        changeSection('section5'); // éxito inmediato
+        const form = e.target;
+        const fd = new FormData(form);
+        fetch(form.action,{method:form.method, body:fd})
+          .then(r=>r.text()).then(txt=>console.log('OK:',txt))
+          .catch(err=>console.error('Error:',err));
+      }
+    });
 
-            // Mostrar nombre del archivo seleccionado
-            function updateFileName(input) {
-                const fileNameElement = document.getElementById('fileName');
-                if (input.files.length > 0) {
-                    fileNameElement.textContent = input.files[0].name;
-                } else {
-                    fileNameElement.textContent = '';
-                }
-            }
-
-            // Enviar formulario
-            document.getElementById('projectForm').addEventListener('submit', function(e) {
-                e.preventDefault(); // Prevenir envío por defecto en todos los casos
-
-                // Solo si estamos en la sección 4 y todo es válido, procedemos
-                if (currentSection === 4) {
-                    // Cambiar a sección 5 inmediatamente después de validación exitosa
-                    changeSection('section5');
-
-                    // Realizar el envío del formulario en segundo plano
-                    const form = e.target;
-                    const formData = new FormData(form);
-
-                    fetch(form.action, {
-                        method: form.method,
-                        body: formData
-                    })
-                    .then(response => {
-                        if (!response.ok) {
-                            console.error('Error al enviar el formulario:', response.statusText);
-                        }
-                        return response.text();
-                    })
-                    .then(data => {
-                        console.log('Formulario enviado con éxito:', data);
-                    })
-                    .catch(error => {
-                        console.error('Error de red o CORS al enviar:', error);
-                    });
-                }
-            });
-
-            // Mobile step navigation
-            function setupMobileSteps() {
-                const mobileSteps = document.querySelectorAll('.mobile-step');
-
-                mobileSteps.forEach(step => {
-                    step.addEventListener('click', () => {
-                        const stepNumber = parseInt(step.dataset.step);
-                        if (stepNumber < currentSection || validateCurrentSection()) {
-                            changeSection(`section${stepNumber}`);
-                        }
-                    });
-                });
-            }
-
-            // Validar sección actual antes de permitir navegación
-            function validateCurrentSection() {
-                if (currentSection === 1) {
-                    return validateSection1();
-                } else if (currentSection === 2) {
-                    return validateSection2();
-                } else if (currentSection === 3) {
-                    return validateSection3();
-                } else if (currentSection === 4) {
-                    return validateSection4();
-                }
-                return true;
-            }
-
-            // Inicialización cuando el DOM esté cargado
-            document.addEventListener('DOMContentLoaded', function() {
-                updateProgress();
-                handleTechnologyChange();
-                handleConnectionModeChange();
-                setupCompass();
-                setupMobileSteps();
-            });
-        </script>
-    </body>
+    document.addEventListener('DOMContentLoaded', function(){
+      updateProgress();
+      handleTechnologyChange();
+      handleConnectionModeChange();
+      setupCompass();
+      setupMobileSteps();
+    });
+  </script>
+</body>
 </html>
